@@ -8,7 +8,7 @@ list:
 # Develop with file watcher
 web:
   open https://home.omg.lol/address/brock/web/preview
-  bun --watch script/web.ts watch
+  bun --hot script/web.ts watch
 
 # Preview without publishing
 web-preview:
