@@ -23,13 +23,13 @@ function setUnlisted(content: string) {
 async function update(options: {
   fileName: string;
   type: WebLogType;
-  prod?: boolean;
+  publish?: boolean;
 }) {
-  const { fileName, type, prod = false } = options;
+  const { fileName, type, publish } = options;
   const entryName = path.parse(fileName).name;
   let body = await Bun.file(`weblog/${type}/${fileName}`).text();
 
-  if (!prod) {
+  if (!publish) {
     body = setUnlisted(body);
     body += reloadScript;
   }
@@ -68,7 +68,8 @@ async function previewWatch(name: string) {
   }
 }
 
-async function publish() {
+async function updateAll(options: { publish?: boolean }) {
+  const { publish } = options;
   const diff = await simpleGit().diffSummary(["--name-status", "origin/main"]);
 
   for (const file of diff.files) {
@@ -80,10 +81,10 @@ async function publish() {
 
     console.log(`${file.status} ${fileName}`);
 
-    if (file.status === "D") {
+    if (file.status === "D" && publish) {
       await del(fileName);
     } else {
-      await update({ fileName, type, prod: true });
+      await update({ fileName, type, publish });
     }
   }
 
@@ -98,9 +99,9 @@ async function main() {
   if (command === "watch") {
     await previewWatch(name);
   } else if (command === "preview") {
-    await update({ fileName: name, type: "entry" });
+    await updateAll({ publish: false });
   } else if (command === "publish") {
-    await publish();
+    await updateAll({ publish: true });
   } else {
     console.error("Unknown command");
     process.exit(1);

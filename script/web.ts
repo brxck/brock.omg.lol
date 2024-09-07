@@ -2,28 +2,21 @@ import { watch } from "fs/promises";
 import { omg } from "./omg";
 import { reloader, reloadScript } from "./reloader";
 
-async function update(options?: { prod: boolean }) {
+async function update(options?: { publish?: boolean }) {
   const body = {
     css: await Bun.file("web/style.css").text(),
     content: await Bun.file("web/content.md").text(),
     head: await Bun.file("web/head.html").text(),
     metadata: await Bun.file("web/metadata.json").json(),
     theme: "naked",
+    publish: options?.publish,
   };
 
-  if (!options?.prod) {
+  if (!options?.publish) {
     body.content += "\n\n" + reloadScript;
   }
 
   const data = await omg("address/brock/web", { method: "POST", body });
-  console.log(data);
-}
-
-async function publish() {
-  const data = await omg("address/brock/web", {
-    method: "POST",
-    body: { publish: true },
-  });
   console.log(data);
 }
 
@@ -51,8 +44,7 @@ async function main() {
   } else if (command === "preview") {
     await update();
   } else if (command === "publish") {
-    await update({ prod: true });
-    await publish();
+    await update({ publish: true });
   } else {
     console.error("Unknown command");
     process.exit(1);

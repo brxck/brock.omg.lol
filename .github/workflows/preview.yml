@@ -1,4 +1,4 @@
-name: PR
+name: Preview
 
 on:
   pull_request:
@@ -6,8 +6,7 @@ on:
       - main
 
 jobs:
-  preview:
-    name: Preview
+  web:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,3 +18,15 @@ jobs:
         env:
           OMG_KEY: ${{ secrets.OMG_KEY }}
       - run: "echo 'Preview URL: https://home.omg.lol/address/brock/web/preview'"
+
+  weblog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.1.27
+      - run: bun install --frozen-lockfile
+      - run: npx just weblog-preview
+        env:
+          OMG_KEY: ${{ secrets.OMG_KEY }}
