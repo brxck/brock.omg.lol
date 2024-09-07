@@ -1,0 +1,20 @@
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  publish:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.1.27
+      - run: bun install --frozen-lockfile
+      - run: npx just weblog-publish
+        env:
+          OMG_KEY: ${{ secrets.OMG_KEY }}
