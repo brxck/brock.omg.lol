@@ -17,3 +17,12 @@ web-preview:
 # Publish to the web
 web-publish:
   bun script/web.ts publish
+
+weblog name:
+  bun --hot script/weblog.ts watch {{name}}
+
+weblog-preview name:
+  bun script/weblog.ts preview {{name}}
+
+weblog-publish:
+  bun script/weblog.ts publish
