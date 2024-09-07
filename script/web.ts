@@ -17,6 +17,10 @@ async function update(options?: { prod: boolean }) {
   }
 
   const data = await omg("address/brock/web", { method: "POST", body });
+  if (data.error && !options?.prod) {
+    console.error(data.error);
+    process.exit(1);
+  }
   console.log(data);
 }
 
@@ -25,6 +29,10 @@ async function publish() {
     method: "POST",
     body: { publish: true },
   });
+  if (data.error) {
+    console.error(data.error);
+    process.exit(1);
+  }
   console.log(data);
 }
 
