@@ -17,5 +17,9 @@
   },
   "trustedDependencies": [
     "just-install"
-  ]
+  ],
+  "dependencies": {
+    "mime": "^4.0.4",
+    "simple-git": "^3.26.0"
+  }
 }

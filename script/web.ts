@@ -1,9 +1,8 @@
 import { watch } from "fs/promises";
 import { omg } from "./omg";
+import { reloader, reloadScript } from "./reloader";
 
 async function update(options?: { prod: boolean }) {
-  const dev = await Bun.file("web/dev.md").text();
-
   const body = {
     css: await Bun.file("web/style.css").text(),
     content: await Bun.file("web/content.md").text(),
@@ -13,14 +12,10 @@ async function update(options?: { prod: boolean }) {
   };
 
   if (!options?.prod) {
-    body.content += "\n\n" + dev;
+    body.content += "\n\n" + reloadScript;
   }
 
   const data = await omg("address/brock/web", { method: "POST", body });
-  if (data.error && !options?.prod) {
-    console.error(data.error);
-    process.exit(1);
-  }
   console.log(data);
 }
 
@@ -29,10 +24,6 @@ async function publish() {
     method: "POST",
     body: { publish: true },
   });
-  if (data.error) {
-    console.error(data.error);
-    process.exit(1);
-  }
   console.log(data);
 }
 
@@ -41,25 +32,13 @@ async function updateWatch() {
   await update();
 
   const watcher = watch("web");
-  const server = Bun.serve({
-    port: 4242,
-    fetch(req, server) {
-      const success = server.upgrade(req);
-      console.log(success ? "Websocket connected" : "Websocket failed");
-    },
-    websocket: {
-      message(ws, message) {},
-      open(ws) {
-        ws.subscribe("reload");
-      },
-    },
-  });
+  const { reload } = reloader();
 
   for await (const event of watcher) {
     console.log(`Detected ${event.eventType} in ${event.filename}`);
     await update();
     console.log("Reloading browser");
-    server.publish("reload", "reload");
+    reload();
   }
 }
 
