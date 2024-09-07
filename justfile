@@ -12,7 +12,7 @@ web:
 
 # Preview without publishing
 web-preview:
-  bun script/web.ts watch
+  bun script/web.ts preview
 
 # Publish to the web
 web-publish:
@@ -21,8 +21,8 @@ web-publish:
 weblog name:
   bun --hot script/weblog.ts watch {{name}}
 
-weblog-preview name:
-  bun script/weblog.ts preview {{name}}
+weblog-preview:
+  bun script/weblog.ts preview
 
 weblog-publish:
   bun script/weblog.ts publish
