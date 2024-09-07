@@ -6,7 +6,8 @@ on:
       - main
 
 jobs:
-  build:
+  publish:
+    name: Publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,3 +16,5 @@ jobs:
           bun-version: 1.1.27
       - run: bun install --frozen-lockfile
       - run: npx just web-publish
+        env:
+          OMG_KEY: ${{ secrets.OMG_KEY }}
