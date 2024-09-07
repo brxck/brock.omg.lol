@@ -5,6 +5,13 @@ import { simpleGit } from "simple-git";
 import mime from "mime";
 import path from "path";
 
+const WEBLOG_TYPES = ["entry", "file", "template"];
+type WebLogType = (typeof WEBLOG_TYPES)[number];
+
+function isValidType(type: string): type is WebLogType {
+  return WEBLOG_TYPES.includes(type as WebLogType);
+}
+
 function setUnlisted(content: string) {
   if (content.match(/^Status: \w+/)) {
     return content.replace(/^Status: \w+/, "Status: Unlisted");
@@ -15,7 +22,7 @@ function setUnlisted(content: string) {
 
 async function update(options: {
   fileName: string;
-  type: "entry" | "file" | "template";
+  type: WebLogType;
   prod?: boolean;
 }) {
   const { fileName, type, prod = false } = options;
@@ -29,9 +36,9 @@ async function update(options: {
 
   if (type === "file") {
     const contentType = mime.getType(fileName);
-    body = `Type: File\nContent-Type: ${contentType}\n${body}`;
+    body = `Type: file\nContent-Type: ${contentType}\nTitle: ${entryName}\nLocation: ${fileName}\n\n${body}`;
   } else if (type === "template") {
-    body = `Type: Template\n${body}`;
+    body = `Type: Template\nTitle: ${entryName}\n\n${body}`;
   }
 
   const data = await omg(`address/brock/weblog/entry/${entryName}`, {
@@ -62,19 +69,21 @@ async function previewWatch(name: string) {
 }
 
 async function publish() {
-  const diff = await simpleGit().diffSummary();
-  const files = diff.files.filter((file) => file.file.endsWith(".md"));
+  const diff = await simpleGit().diffSummary(["--name-status", "origin/main"]);
 
-  for (const file of files) {
-    const [_, type, fileName] = file.file.split("/");
-    if (file.status === "deleted") {
+  for (const file of diff.files) {
+    const [dir, type, fileName] = file.file.split("/");
+
+    if (dir !== "weblog" || !isValidType(type) || !fileName) {
+      continue;
+    }
+
+    console.log(`${file.status} ${fileName}`);
+
+    if (file.status === "D") {
       await del(fileName);
     } else {
-      await update({
-        fileName,
-        type: type as "entry" | "file" | "template",
-        prod: true,
-      });
+      await update({ fileName, type, prod: true });
     }
   }
 
