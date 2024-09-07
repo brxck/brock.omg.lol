@@ -1,6 +1,17 @@
 html {
-  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui,
-    helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial,
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    avenir next,
+    avenir,
+    segoe ui,
+    helvetica neue,
+    helvetica,
+    Cantarell,
+    Ubuntu,
+    roboto,
+    noto,
+    arial,
     sans-serif;
 }
 
@@ -41,7 +52,7 @@ p {
 }
 
 .statuslol {
-  align-items: center;
+  align-items: start;
   border-left: 2px solid CanvasText;
   display: flex;
   padding: 0.25rem 0;
@@ -50,7 +61,8 @@ p {
 .statuslol_emoji_container {
   align-items: center;
   display: flex;
-  padding-right: 0.5rem;
+  padding-top: 0.1rem;
+  padding-right: 0.75rem;
   padding-left: 1rem;
 }
 
@@ -64,6 +76,7 @@ p {
 
 .statuslol_time {
   font-size: 0.8rem;
+  margin-top: 0.25rem;
 }
 
 #profile-picture-container {
