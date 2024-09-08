@@ -3,7 +3,7 @@ export function reloader() {
     port: 4242,
     fetch(req, server) {
       const success = server.upgrade(req);
-      console.log(success ? "Websocket connected" : "Websocket failed");
+      console.log(success ? "Browser connected" : "Browser failed to connect");
     },
     websocket: {
       message(ws, message) {},
@@ -17,13 +17,4 @@ export function reloader() {
   };
 }
 
-export const reloadScript = `
-  <script>
-    const ws = new WebSocket("ws://localhost:4242");
-    ws.onmessage = (event) => {
-      if (event.data === "reload") {
-        location.reload();
-      }
-    };
-  </script>
-`;
+export const reloadScript = `<script src="https://${process.env.OMG_ADDRESS}.weblog.lol/reload.js"></script>`;

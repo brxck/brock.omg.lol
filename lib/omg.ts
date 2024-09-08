@@ -6,7 +6,12 @@ export async function omg<T>(
   path: string,
   init?: Omit<RequestInit, "body"> & { body?: string | Record<string, unknown> }
 ): Promise<OmgResponse<T>> {
-  const response = await fetch("https://api.omg.lol/" + path, {
+  const url = `https://api.omg.lol/${path}`.replace(
+    "{address}",
+    process.env.OMG_ADDRESS!
+  );
+
+  const response = await fetch(url, {
     headers: {
       Authorization: "Bearer " + process.env.OMG_KEY,
     },
