@@ -78,8 +78,8 @@ async function updateAll(options: {
   console.log(`Base: ${base}, Head: ${head}`);
 
   const diff = await simpleGit()
-    .fetch(`origin/${base}`)
-    .diffSummary(["--name-status", "--no-renames", `origin/${base}`, head]);
+    .fetch(`origin ${base}`)
+    .diffSummary(["--name-status", "--no-renames", base, head]);
 
   for (const file of diff.files) {
     const [dir, type, fileName] = file.file.split("/");
