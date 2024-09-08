@@ -27,11 +27,6 @@ jobs:
         with:
           bun-version: 1.1.27
       - run: bun install --frozen-lockfile
-      - id: changed-files
-        uses: tj-actions/changed-files@e9772d140489982e0e3704fea5ee93d536f1e275 #v45.0.1
-        with:
-          files: weblog/*/**
-      - run: bunx just weblog-publish ${CHANGED_FILES}
+      - run: bunx just weblog-publish ${{ github.base_ref }} ${{ github.sha }}
         env:
-          CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
           OMG_KEY: ${{ secrets.OMG_KEY }}

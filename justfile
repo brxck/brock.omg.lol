@@ -8,10 +8,6 @@ default: list
 @list:
   just --list
 
-# Get changed files in {dir}
-changed dir:
-  git diff --name-only origin/main | grep {{dir}}
-
 # Develop web with watcher
 web:
   open https://home.omg.lol/address/{{OMG_ADDRESS}}/web/preview
@@ -30,14 +26,10 @@ weblog name:
   open https://home.omg.lol/address/{{OMG_ADDRESS}}/weblog
   bun --hot script/weblog.ts watch {{name}}
 
-# Save weblog preview of {files} or changed files
-weblog-preview *files:
-  #!/usr/bin/env bash
-  set -uexo pipefail
-  FILES="{{files}}"
-  FILES=${FILES:-$(just changed weblog)}
-  echo $FILES | xargs bun script/weblog.ts preview
+# Save weblog preview of changed files
+weblog-preview base='main' head='HEAD':
+  bun script/weblog.ts preview {{base}} {{head}}
 
-# Publish weblog {files}
-weblog-publish +files:
-  echo "{{files}}" | xargs bun script/weblog.ts publish
+# Publish changed weblog files
+weblog-publish base='main' head='HEAD':
+  bun script/weblog.ts publish {{base}} {{head}}
