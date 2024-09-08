@@ -1,3 +1,4 @@
+export OMG_ADDRESS := "brock"
 export PATH := "./node_modules/.bin:" + env_var('PATH')
 
 [private]
@@ -13,7 +14,7 @@ changed dir:
 
 # Develop web with watcher
 web:
-  open https://home.omg.lol/address/brock/web/preview
+  open https://home.omg.lol/address/{{OMG_ADDRESS}}/web/preview
   bun --hot script/web.ts watch
 
 # Save web preview
@@ -26,6 +27,7 @@ web-publish:
 
 # Develop weblog with watcher
 weblog name:
+  open https://home.omg.lol/address/{{OMG_ADDRESS}}/weblog
   bun --hot script/weblog.ts watch {{name}}
 
 # Save weblog preview of {files} or changed files
