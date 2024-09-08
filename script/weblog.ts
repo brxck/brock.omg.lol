@@ -68,13 +68,18 @@ async function previewWatch(name: string) {
   }
 }
 
-async function updateAll(options: { publish?: boolean }) {
-  const { publish } = options;
-  const diff = await simpleGit().diffSummary([
-    "--name-status",
-    "--no-renames",
-    "origin/main",
-  ]);
+async function updateAll(options: {
+  base: string;
+  head: string;
+  publish: boolean;
+}) {
+  const { base, head, publish } = options;
+  console.log((publish ? "Publishing" : "Previewing") + " weblog...");
+  console.log(`Base: ${base}, Head: ${head}`);
+
+  const diff = await simpleGit()
+    .fetch(`origin/${base}`)
+    .diffSummary(["--name-status", "--no-renames", `origin/${base}`, head]);
 
   for (const file of diff.files) {
     const [dir, type, fileName] = file.file.split("/");
@@ -92,20 +97,20 @@ async function updateAll(options: { publish?: boolean }) {
     }
   }
 
-  console.log("Published successfully!");
+  console.log("Updated successfully!");
 }
 
 async function main() {
-  const args = process.argv.slice(2);
-  const command = args[0];
-  const name = args[1];
+  const [command, ...args] = process.argv.slice(2);
 
   if (command === "watch") {
-    await previewWatch(name);
+    await previewWatch(args[0]);
   } else if (command === "preview") {
-    await updateAll({ publish: false });
+    const [base, head] = args;
+    await updateAll({ base, head, publish: false });
   } else if (command === "publish") {
-    await updateAll({ publish: true });
+    const [base, head] = args;
+    await updateAll({ base, head, publish: true });
   } else {
     console.error("Unknown command");
     process.exit(1);
