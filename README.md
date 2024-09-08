@@ -1,15 +1,35 @@
 # brock.omg.lol
 
-To install dependencies:
+### Setup
 
-```bash
+Requires [Bun](https://bun.sh). Install dependencies
+
+```sh
 bun install
 ```
 
-To run:
+Define `OMG_KEY` in `.env`
 
-```bash
-bun run index.ts
+### Develop
+
+List all commands with `just`:
+
+```sh
+just
+# Also available via bun
+bunx just
 ```
 
-This project was created using `bun init` in bun v1.1.27. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+To develop locally with live-reload:
+
+```sh
+just web
+```
+
+```sh
+just weblog entry-name.md
+```
+
+### Deploy
+
+Changes are deployed as preview/unlisted on PR and published on merge.

@@ -14,10 +14,9 @@ jobs:
         with:
           bun-version: 1.1.27
       - run: bun install --frozen-lockfile
-      - run: npx just web-preview
+      - run: bunx just web-preview
         env:
           OMG_KEY: ${{ secrets.OMG_KEY }}
-      - run: "echo 'Preview URL: https://home.omg.lol/address/brock/web/preview'"
 
   weblog:
     runs-on: ubuntu-latest
@@ -31,7 +30,7 @@ jobs:
         uses: tj-actions/changed-files@e9772d140489982e0e3704fea5ee93d536f1e275 #v45.0.1
         with:
           files: weblog/*/**
-      - run: npx just weblog-preview ${CHANGED_FILES}
+      - run: bunx just weblog-preview ${CHANGED_FILES}
         env:
           CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
           OMG_KEY: ${{ secrets.OMG_KEY }}
