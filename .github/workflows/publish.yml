@@ -30,3 +30,4 @@ jobs:
       - run: bunx just weblog-publish ${{ github.event.pull_request.base.sha }} ${{ github.sha }}
         env:
           OMG_KEY: ${{ secrets.OMG_KEY }}
+          DEBUG: simple-git
