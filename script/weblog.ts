@@ -29,7 +29,7 @@ async function update(options: {
   const entryName = path.parse(fileName).name;
   let body = await Bun.file(`weblog/${type}/${fileName}`).text();
 
-  if (!publish) {
+  if (!publish && type === "entry") {
     body = setUnlisted(body);
     body += reloadScript;
   }
@@ -70,7 +70,11 @@ async function previewWatch(name: string) {
 
 async function updateAll(options: { publish?: boolean }) {
   const { publish } = options;
-  const diff = await simpleGit().diffSummary(["--name-status", "origin/main"]);
+  const diff = await simpleGit().diffSummary([
+    "--name-status",
+    "--no-renames",
+    "origin/main",
+  ]);
 
   for (const file of diff.files) {
     const [dir, type, fileName] = file.file.split("/");
