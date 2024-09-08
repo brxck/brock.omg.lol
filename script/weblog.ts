@@ -1,6 +1,6 @@
 import { watch } from "fs/promises";
-import { omg } from "./omg";
-import { reloader, reloadScript } from "./reloader";
+import { omg } from "../lib/omg";
+import { reloader, reloadScript } from "../lib/reload";
 import { simpleGit } from "simple-git";
 import mime from "mime";
 import path from "path";
@@ -41,7 +41,7 @@ async function update(options: {
     body = `Type: Template\nTitle: ${entryName}\n\n${body}`;
   }
 
-  const data = await omg(`address/brock/weblog/entry/${entryName}`, {
+  const data = await omg(`address/{address}/weblog/entry/${entryName}`, {
     method: "POST",
     body,
   });
@@ -50,7 +50,7 @@ async function update(options: {
 
 function del(name: string) {
   const entryName = path.parse(name).name;
-  return omg(`address/brock/web/${entryName}`, { method: "DELETE" });
+  return omg(`address/{address}/web/${entryName}`, { method: "DELETE" });
 }
 
 async function previewWatch(name: string) {

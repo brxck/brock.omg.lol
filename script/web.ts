@@ -1,6 +1,6 @@
 import { watch } from "fs/promises";
-import { omg } from "./omg";
-import { reloader, reloadScript } from "./reloader";
+import { omg } from "../lib/omg";
+import { reloader, reloadScript } from "../lib/reload";
 
 async function update(options?: { publish?: boolean }) {
   const body = {
@@ -16,7 +16,7 @@ async function update(options?: { publish?: boolean }) {
     body.content += "\n\n" + reloadScript;
   }
 
-  const data = await omg("address/brock/web", { method: "POST", body });
+  const data = await omg("address/{address}/web", { method: "POST", body });
   console.log(data);
 }
 
