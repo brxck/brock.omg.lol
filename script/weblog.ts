@@ -20,6 +20,26 @@ function setUnlisted(content: string) {
   }
 }
 
+function mergeMeta(entry: string, values: Record<string, string | null>) {
+  let updated = entry;
+  let newMeta = "";
+  for (const [key, value] of Object.entries(values)) {
+    const pattern = new RegExp(`^${key}: \\w+`);
+    if (updated.match(pattern)) {
+      updated = updated.replace(pattern, `${key}: ${value}`);
+    } else {
+      newMeta += `${key}: ${value}\n`;
+    }
+  }
+
+  const pattern = /^\w+: \w+$/;
+  if (updated.match(pattern)) {
+    return updated.replace(pattern, newMeta + "$&");
+  } else {
+    return newMeta + updated;
+  }
+}
+
 async function update(options: {
   fileName: string;
   type: WebLogType;
@@ -30,15 +50,29 @@ async function update(options: {
   let body = await Bun.file(`weblog/${type}/${fileName}`).text();
 
   if (!publish && type === "entry") {
-    body = setUnlisted(body);
+    body = mergeMeta(body, {
+      Status: "Unlisted",
+      // Should not be returned by the /latest API
+      Date: "1970-01-01 00:00",
+    });
     body += reloadScript;
   }
 
   if (type === "file") {
     const contentType = mime.getType(fileName);
-    body = `Type: file\nContent-Type: ${contentType}\nTitle: ${entryName}\nLocation: ${fileName}\n\n${body}`;
+    body = mergeMeta(body, {
+      Type: "file",
+      "Content-Type": contentType,
+      Title: entryName,
+      Location: fileName,
+      Date: "1970-01-01 00:00",
+    });
   } else if (type === "template") {
-    body = `Type: Template\nTitle: ${entryName}\n\n${body}`;
+    body = mergeMeta(body, {
+      Type: "Template",
+      Title: entryName,
+      Date: "1970-01-01 00:00",
+    });
   }
 
   const data = await omg(`address/{address}/weblog/entry/${entryName}`, {

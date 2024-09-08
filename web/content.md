@@ -20,8 +20,9 @@ I'm building convenient access to healthcare at [Solv.](https://www.solvhealth.c
 
 #### More of me
 
-- [github.com/brxck](https://github.com/brxck)
-- [brock.weblog.lol](https://brock.weblog.lol/)
-- [social.lol/@brock](https://social.lol/@brock)
+- [Weblog](https://brock.weblog.lol/): <script async src="https://brock.weblog.lol/latestEntry.js"></script>
+- [Statuslog](https://brock.status.lol/)
+- [Mastodon](https://social.lol/@brock)
+- [Github](https://github.com/brxck)
 
 --- End ---

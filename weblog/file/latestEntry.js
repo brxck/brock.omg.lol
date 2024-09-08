@@ -1,3 +1,5 @@
+"use strict";
+
 async function main() {
   const container = document.createElement("span");
   container.className = "weblogentry";
@@ -12,7 +14,7 @@ async function main() {
   const data = await response.json();
   const post = data.response.post;
 
-  container.innerHTML = `<a href="${post.location}">${post.title}</a>`;
+  container.innerHTML = `<a href="https://${post.address}.weblog.lol${post.location}">${post.title}</a>`;
 }
 
 main();
