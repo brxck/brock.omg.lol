@@ -12,14 +12,6 @@ function isValidType(type: string): type is WebLogType {
   return WEBLOG_TYPES.includes(type as WebLogType);
 }
 
-function setUnlisted(content: string) {
-  if (content.match(/^Status: \w+/)) {
-    return content.replace(/^Status: \w+/, "Status: Unlisted");
-  } else {
-    return "Status: Unlisted\n" + content;
-  }
-}
-
 function mergeMeta(entry: string, values: Record<string, string | null>) {
   let updated = entry;
   let newMeta = "";
@@ -40,7 +32,7 @@ function mergeMeta(entry: string, values: Record<string, string | null>) {
   }
 }
 
-async function update(options: {
+async function updateEntry(options: {
   fileName: string;
   type: WebLogType;
   publish?: boolean;
@@ -82,21 +74,32 @@ async function update(options: {
   console.log(data.message);
 }
 
-function del(name: string) {
+function deleteEntry(name: string) {
   const entryName = path.parse(name).name;
   return omg(`address/{address}/web/${entryName}`, { method: "DELETE" });
 }
 
+async function updateConfig() {
+  await omg(`address/{address}/weblog/configuration`, {
+    method: "POST",
+    body: await Bun.file("weblog/weblog.conf").text(),
+  });
+  await omg(`address/{address}/weblog/template`, {
+    method: "POST",
+    body: await Bun.file("weblog/template.html").text(),
+  });
+}
+
 async function previewWatch(name: string) {
   console.log("Starting weblog watcher");
-  await update({ fileName: name, type: "entry" });
+  await updateEntry({ fileName: name, type: "entry" });
 
   const watcher = watch("weblog", { recursive: true });
   const { reload } = reloader();
 
   for await (const event of watcher) {
     console.log(`Detected ${event.eventType} in ${event.filename}`);
-    await update({ fileName: name, type: "entry" });
+    await updateEntry({ fileName: name, type: "entry" });
     console.log("Reloading browser");
     reload();
   }
@@ -125,9 +128,9 @@ async function updateAll(options: {
     console.log(`${file.status} ${fileName}`);
 
     if (file.status === "D" && publish) {
-      await del(fileName);
+      await deleteEntry(fileName);
     } else {
-      await update({ fileName, type, publish });
+      await updateEntry({ fileName, type, publish });
     }
   }
 
@@ -145,6 +148,7 @@ async function main() {
   } else if (command === "publish") {
     const [base, head] = args;
     await updateAll({ base, head, publish: true });
+    await updateConfig();
   } else {
     console.error("Unknown command");
     process.exit(1);
