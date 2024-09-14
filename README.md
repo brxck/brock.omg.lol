@@ -2,13 +2,13 @@
 
 ### Setup
 
-Requires [Bun](https://bun.sh). Install dependencies
+Requires [Bun](https://bun.sh). Install dependencies:
 
 ```sh
 bun install
 ```
 
-Define `OMG_KEY` in `.env`
+Define `OMG_KEY` in `.env`.
 
 ### Develop
 
