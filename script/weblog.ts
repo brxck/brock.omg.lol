@@ -16,7 +16,7 @@ function mergeMeta(entry: string, values: Record<string, string | null>) {
   let updated = entry;
   let newMeta = "";
   for (const [key, value] of Object.entries(values)) {
-    const pattern = new RegExp(`^${key}: \\w+`);
+    const pattern = new RegExp(`^${key}: .+$`, "gm");
     if (updated.match(pattern)) {
       updated = updated.replace(pattern, `${key}: ${value}`);
     } else {
@@ -24,11 +24,15 @@ function mergeMeta(entry: string, values: Record<string, string | null>) {
     }
   }
 
-  const pattern = /^\w+: \w+$/;
+  if (newMeta.length === 0) {
+    return updated;
+  }
+
+  const pattern = /^\w+: .+$/gm;
   if (updated.match(pattern)) {
     return updated.replace(pattern, newMeta + "$&");
   } else {
-    return newMeta + updated;
+    return newMeta + "\n" + updated;
   }
 }
 
