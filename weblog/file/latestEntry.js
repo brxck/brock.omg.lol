@@ -13,8 +13,14 @@ async function main() {
   );
   const data = await response.json();
   const post = data.response.post;
+  const date = new Date(post.date);
+  const dateString = date.toLocaleDateString("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "2-digit",
+  });
 
-  container.innerHTML = `<a href="https://${post.address}.weblog.lol${post.location}">${post.title}</a>`;
+  container.innerHTML = `<a href="https://${post.address}.weblog.lol${post.location}">"${post.title}" (${dateString})</a>`;
 }
 
 main();
