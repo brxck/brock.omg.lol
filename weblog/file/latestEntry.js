@@ -13,7 +13,7 @@ async function main() {
   );
   const data = await response.json();
   const post = data.response.post;
-  const date = new Date(post.date);
+  const date = new Date(post.date * 1000);
   const dateString = date.toLocaleDateString("en-US", {
     month: "2-digit",
     day: "2-digit",
