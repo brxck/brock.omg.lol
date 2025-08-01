@@ -8,6 +8,10 @@
 | Location: Portland, Oregon
 | Pronouns: he/him
 
+--- Bio ---
+
+Moving on to something new!
+
 --- Status ---
 
 <script async src="https://status.lol/brock.js?time&link&fluent"></script>
