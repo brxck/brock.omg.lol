@@ -4,13 +4,9 @@
 
 --- Meta ---
 
-| Pronouns: he/him
 | Occupation: Software Engineer
 | Location: Portland, Oregon
-
---- Bio ---
-
-I'm building convenient access to healthcare at [Solv.](https://www.solvhealth.com/)
+| Pronouns: he/him
 
 --- Status ---
 
