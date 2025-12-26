@@ -10,7 +10,7 @@
 
 --- Bio ---
 
-Moving on to something new!
+I'm a software engineer at <a href="https://owner.com">Owner.com</a>.
 
 --- Status ---
 
